@@ -73,9 +73,9 @@ const services = [
 ];
 
 const statsData = [
-  { name: "રેવન્યુ હિસાબ", villages: 2855, accounts: 3903163, pages: 243454 },
-  { name: "૯ડી વેરા રજી.", villages: 1253, accounts: 687925, pages: 95933 },
-  { name: "આકારણી સર્વે", villages: 316, accounts: 187640, pages: 23458 },
+  { name: "રેવન્યુ હિસાબ", villages: 2855, taluka: 30, district: 9 },
+  { name: "૯ડી વેરા રજી.", villages: 1253, taluka: 28, district: 10 },
+  { name: "આકારણી સર્વે", villages: 316, taluka: 26, district: 9 },
 ];
 
 const fullStats = [
@@ -132,9 +132,57 @@ const StatCard = ({ icon, label, value, subLabel }) => (
 
 export default function App() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
-  const [activeTab, setActiveTab] = useState("chart"); // 'chart' or 'table'
+  const [activeTab, setActiveTab] = useState("table"); // 'chart' or 'table'
 
   const toggleMenu = () => setIsMenuOpen(!isMenuOpen);
+
+  const [formData, setFormData] = useState({
+    fullName: "",
+    mobile: "",
+    email: "",
+    designation: "",
+    subject: "",
+    joiningDate: "",
+    village: "",
+    taluka: "",
+    district: "",
+    note: "",
+  });
+
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    setFormData((prev) => ({
+      ...prev,
+      [name]: value,
+    }));
+  };
+
+  const handleSubmit = () => {
+    const message = `
+ \`Inquiry Details\`
+
+ - *Full Name:* ${formData.fullName}
+ - *Mobile:* ${formData.mobile}
+ - *Email:* ${formData.email || "N/A"}
+ - *Designation:* ${formData.designation}
+
+ *Subject:* ${formData.subject}
+
+ - *Service Joining Date:* ${formData.joiningDate}
+ - *On Duty Village:* ${formData.village}
+ - *Taluka:* ${formData.taluka}
+ - *District:* ${formData.district}
+
+ *Special Note:*
+${formData.note}
+    `;
+
+    const whatsappUrl = `https://wa.me/919376443146?text=${encodeURIComponent(
+      message,
+    )}`;
+
+    window.open(whatsappUrl, "_blank");
+  };
 
   return (
     <div className="font-sans text-slate-800 bg-slate-50 min-h-screen flex flex-col">
@@ -468,9 +516,15 @@ export default function App() {
                         radius={[4, 4, 0, 0]}
                       />
                       <Bar
-                        name="ટાઇપ કરેલ પાના (x0.1)"
-                        dataKey="pages"
+                        name="તાલુકા"
+                        dataKey="taluka"
                         fill="#3b82f6"
+                        radius={[4, 4, 0, 0]}
+                      />
+                      <Bar
+                        name="District"
+                        dataKey="district"
+                        fill="#ef4444"
                         radius={[4, 4, 0, 0]}
                       />
                     </BarChart>
@@ -554,9 +608,12 @@ export default function App() {
                         Full Name / પુરુ નામ
                       </label>
                       <input
+                        name="fullName"
+                        value={formData.fullName}
+                        onChange={handleChange}
+                        placeholder="Enter full name"
                         type="text"
                         className="w-full px-4 py-2 rounded-lg border border-slate-300 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition-all"
-                        placeholder="Enter full name"
                       />
                     </div>
                     <div>
@@ -564,9 +621,12 @@ export default function App() {
                         Mobile No. / મોબાઇલ નં.
                       </label>
                       <input
+                        name="mobile"
+                        value={formData.mobile}
+                        onChange={handleChange}
+                        placeholder="+91"
                         type="tel"
                         className="w-full px-4 py-2 rounded-lg border border-slate-300 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition-all"
-                        placeholder="+91"
                       />
                     </div>
                   </div>
@@ -577,31 +637,47 @@ export default function App() {
                         Email ID
                       </label>
                       <input
+                        name="email"
+                        value={formData.email}
+                        onChange={handleChange}
+                        placeholder="example@email.com"
                         type="email"
                         className="w-full px-4 py-2 rounded-lg border border-slate-300 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition-all"
-                        placeholder="Optional"
                       />
                     </div>
                     <div>
                       <label className="block text-sm font-medium text-slate-700 mb-1">
                         Designation / હોદ્દો
                       </label>
-                      <select className="w-full px-4 py-2 rounded-lg border border-slate-300 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition-all bg-white">
-                        <option>Select Designation</option>
-                        <option>Sarpanch</option>
-                        <option>Talati Cum Mantri</option>
-                        <option>VCE</option>
-                        <option>TDO</option>
-                        <option>Other</option>
+                      <select
+                        name="designation"
+                        value={formData.designation}
+                        onChange={handleChange}
+                        className="w-full px-4 py-2 rounded-lg border border-slate-300 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition-all bg-white"
+                      >
+                        <option value="">હોદ્દો પસંદ કરો</option>
+                        <option value="Sarpanch">સરપંચ</option>
+                        <option value="Talati Cum Mantri">
+                          તલાટી કમ મંત્રી (TCM)
+                        </option>
+                        <option value="VCE">
+                          વિલેજ કમ્પ્યુટર એન્ટ્રપ્રેન્યોર (VCE)
+                        </option>
+                        <option value="TDO">તાલુકા વિકાસ અધિકારી (TDO)</option>
+                        <option value="Other">અન્ય</option>
                       </select>
                     </div>
                   </div>
 
                   <div>
                     <label className="block text-sm font-medium text-slate-700 mb-1">
-                      Subject / વિષય
+                      Subject
                     </label>
                     <input
+                      name="subject"
+                      value={formData.subject}
+                      onChange={handleChange}
+                      placeholder="વિષય"
                       type="text"
                       className="w-full px-4 py-2 rounded-lg border border-slate-300 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition-all"
                     />
@@ -610,10 +686,13 @@ export default function App() {
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                     <div>
                       <label className="block text-sm font-medium text-slate-700 mb-1">
-                        Service Joining Date
+                        Service Joining Date / સેવામાં જોડાવાની તારીખ
                       </label>
                       <input
                         type="date"
+                        name="joiningDate"
+                        value={formData.joiningDate}
+                        onChange={handleChange}
                         className="w-full px-4 py-2 rounded-lg border border-slate-300 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition-all"
                       />
                     </div>
@@ -622,7 +701,10 @@ export default function App() {
                         On Duty Village
                       </label>
                       <input
-                        type="text"
+                        name="village"
+                        value={formData.village}
+                        onChange={handleChange}
+                        placeholder="ફરજનું ગામ"
                         className="w-full px-4 py-2 rounded-lg border border-slate-300 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition-all"
                       />
                     </div>
@@ -631,18 +713,26 @@ export default function App() {
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                     <div>
                       <label className="block text-sm font-medium text-slate-700 mb-1">
-                        Taluka Name
+                        Taluka
                       </label>
                       <input
+                        name="taluka"
+                        value={formData.taluka}
+                        onChange={handleChange}
+                        placeholder="તાલુકાનું નામ"
                         type="text"
                         className="w-full px-4 py-2 rounded-lg border border-slate-300 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition-all"
                       />
                     </div>
                     <div>
                       <label className="block text-sm font-medium text-slate-700 mb-1">
-                        District Name
+                        District
                       </label>
                       <input
+                        name="district"
+                        value={formData.district}
+                        onChange={handleChange}
+                        placeholder="જિલ્લાનું નામ"
                         type="text"
                         className="w-full px-4 py-2 rounded-lg border border-slate-300 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition-all"
                       />
@@ -654,12 +744,17 @@ export default function App() {
                       Special Note / Suggestion
                     </label>
                     <textarea
+                      name="note"
+                      value={formData.note}
+                      onChange={handleChange}
+                      placeholder="વિશેષ નોંધ"
                       rows="3"
                       className="w-full px-4 py-2 rounded-lg border border-slate-300 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition-all"
                     ></textarea>
                   </div>
 
                   <button
+                    onClick={handleSubmit}
                     type="button"
                     className="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 rounded-lg shadow-md transition-colors"
                   >
