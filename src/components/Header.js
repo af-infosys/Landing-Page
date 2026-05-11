@@ -74,40 +74,54 @@ const Header = () => {
         <div className="md:hidden bg-white border-t border-slate-100 py-4 px-4 shadow-lg">
           <div className="flex flex-col space-y-4 font-medium text-slate-700">
             <a
-              href="#home"
+              href="/"
               onClick={toggleMenu}
               className="block py-2 hover:text-blue-600"
             >
               Home
             </a>
             <a
-              href="#about"
+              href="/#about"
               onClick={toggleMenu}
               className="block py-2 hover:text-blue-600"
             >
               About Us
             </a>
             <a
-              href="#services"
+              href="/#services"
               onClick={toggleMenu}
               className="block py-2 hover:text-blue-600"
             >
               Services
             </a>
             <a
-              href="#work"
+              href="/#work"
               onClick={toggleMenu}
               className="block py-2 hover:text-blue-600"
             >
               Work
             </a>
             <a
-              href="#contact"
+              href="/#contact"
               onClick={toggleMenu}
               className="block py-2 hover:text-blue-600"
             >
               Contact
             </a>
+            <NavLink
+              to="/terms-and-conditions"
+              onClick={toggleMenu}
+              className="hover:text-blue-600 transition-colors"
+            >
+              Terms & Conditions
+            </NavLink>
+            <NavLink
+              to="/privacy-policy"
+              onClick={toggleMenu}
+              className="hover:text-blue-600 transition-colors"
+            >
+              Privacy Policy
+            </NavLink>
           </div>
         </div>
       )}
