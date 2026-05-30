@@ -16,6 +16,15 @@ const Footer = () => {
               <p className="text-sm mt-1">
                 Serving Panchayats with Trust & Technology since 2010
               </p>
+              <h3
+                style={{
+                  fontSize: "16px",
+                  color: "#ff6a6a",
+                  fontWeight: "500",
+                }}
+              >
+                Powered by GRAM PANCHAYAT
+              </h3>
             </div>
           </div>
           <div className="text-sm text-center md:text-right">
